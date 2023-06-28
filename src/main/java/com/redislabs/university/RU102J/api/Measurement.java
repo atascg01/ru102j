@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.ZonedDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /** Model class used to represent a single measurement
@@ -90,5 +92,14 @@ public class Measurement {
                 ", value=" + value +
                 ", metricUnit=" + metricUnit +
                 '}';
+    }
+
+    public Map<String, String> toMap() {
+        Map<String, String> map = new HashMap<>();
+        map.put("scores", String.valueOf(siteId));
+        map.put("dateTime", String.valueOf(dateTime));
+        map.put("value", String.valueOf(value));
+        map.put("metricUnit", metricUnit.name());
+        return map;
     }
 }
