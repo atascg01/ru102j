@@ -43,6 +43,16 @@ public class RedisSchema {
                 String.valueOf(maxHits));
     }
 
+    // [limiter]:[windowSize]:[name]:[maxHits]
+    // Redis type: string of type integer
+    static String getSlidingWindowRateLimiterKey(long windowSize, String name,
+                                    long maxHits) {
+        return KeyHelper.getKey("limiter:" +
+                String.valueOf(windowSize) + ":" +
+                name + ":" +
+                String.valueOf(maxHits));
+    }
+
     // sites:geo
     // Redis type: geo
     static String getSiteGeoKey() {
