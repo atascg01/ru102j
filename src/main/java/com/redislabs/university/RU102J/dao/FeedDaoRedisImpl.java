@@ -32,12 +32,12 @@ public class FeedDaoRedisImpl implements FeedDao {
 
             String globalFeedKey = RedisSchema.getGlobalFeedKey();
             Map<String, String> meterReadingMap = meterReading.toMap();
-            jedis.xadd(globalFeedKey, StreamEntryID.NEW_ENTRY, meterReadingMap);
-            jedis.expire(globalFeedKey, THREE_DAYS_SECONDS);
+            Pipeline p = jedisPool.getResource().pipelined();
+            p.xadd(globalFeedKey, StreamEntryID.NEW_ENTRY, meterReadingMap, globalMaxFeedLength, true);
 
             String feedKey = RedisSchema.getFeedKey(siteId);
-            jedis.xadd(feedKey, StreamEntryID.NEW_ENTRY, meterReadingMap);
-            jedis.expire(globalFeedKey, TWO_WEEKS_SECONDS);
+            p.xadd(feedKey, StreamEntryID.NEW_ENTRY, meterReadingMap, siteMaxFeedLength, true);
+            p.sync();
         }
         // inset to local feed where id is siteId
         // END Challenge #6
